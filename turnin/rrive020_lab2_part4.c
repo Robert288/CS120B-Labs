@@ -31,13 +31,13 @@ int main(void) {
 
                 weight = seatA + seatB + seatC;
 
-                if (weight >= 0x8C) { // If the cart's total passenger weight exceeds the maximum weight of 140 kgs, 
+                if (weight > 0x8C) { // If the cart's total passenger weight exceeds the maximum weight of 140 kgs, 
                         tmpD = tmpD | 0x01; // Then set PD0 to 1
 		} else {
 			tmpD = tmpD & 0xFE; // Else set PD0 to 0
 		}
 
-                if (abs(seatA - seatC) >= 0x50) { // If the difference between A and C exceeds 80 kgs,
+                if (abs(seatA - seatC) > 0x50) { // If the difference between A and C exceeds 80 kgs,
                         tmpD = tmpD | 0x02; // Then set PD1 to 1
 		} else {
 			tmpD = tmpD & 0xFD; // Else set PD1 to 0
