@@ -26,7 +26,7 @@ int main(void) {
 
 		airbagStatus = 0x00;
 
-		if ( (weightB == 0 && weightD >= 0x46) || (weightB == 1 && weightD >= 0x45) ) {
+		if ( (weightB == 0 && weightD >= 0x23) || (weightB == 1 && weightD >= 0x22) ) {
 			airbagStatus = 0x02;
 		} else if ( (weightB == 0 && weightD > 0x05) || (weightB == 1 && weightD > 4) ) {
 			airbagStatus = 0x04;
