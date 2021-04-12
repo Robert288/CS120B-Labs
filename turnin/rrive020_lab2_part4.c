@@ -43,7 +43,7 @@ int main(void) {
 			tmpD = tmpD & 0xFD; // Else set PD1 to 0
 		}
 
-		weight = weight & 0xFC; // Only need to represent the most significant bits
+		weight = (weight >> 2) & 0x3C; // Only need to represent the most significant bits
 
 		PORTD = weight | tmpD; // PD7..PD2 represents an approximiation of the total demand weight
 	}
