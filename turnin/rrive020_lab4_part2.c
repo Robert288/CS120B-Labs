@@ -61,13 +61,33 @@ void TickFct_Button() {
                         }		
 			break;
 
-		case Reset:
+		/* case Reset:
 		case Wait:
                         if (!incrementButton && !decrementButton) {
                                 Button_State = Initial;
                         } else {
                                 Button_State = Wait;
                         }
+			break; */
+		
+		case Reset: 
+                        if (!incrementButton && !decrementButton) {
+                                Button_State = Initial;
+                        } else {
+                                Button_State = Wait;
+                        }
+			break;
+			
+		case Wait: 
+                        if (!incrementButton && !decrementButton) {
+                                Button_State = Initial;
+                        } else if (incrementButton && !decrementButton) {
+                                Button_State = Increment;
+                        } else if (!incrementButton && decrementButton) {
+				Button_State = Decrement;
+			} else {
+                                Button_State = Wait;
+                        }		
 			break;
 	}
 
