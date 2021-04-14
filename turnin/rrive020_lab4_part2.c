@@ -56,11 +56,13 @@ void TickFct_Button() {
 			break;
 
 		case Reset:
-			if (incrementButton == 0 && decrementButton == 0) {
+			/* if (incrementButton == 0 && decrementButton == 0) {
 				Button_State = Wait4;
 			} else {
 				Button_State = Reset;
-			}
+			} */
+			
+			Button_State = Wait4;
 			break;
 
 		case Wait1:
