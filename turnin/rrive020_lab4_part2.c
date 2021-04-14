@@ -107,7 +107,8 @@ void TickFct_Button() {
 			if (incrementButton && decrementButton) {
 				Button_State = Reset;
 			} else if (!incrementButton && !decrementButton) {
-					Button_State = Wait1;
+					// Button_State = Wait1;
+					Button_State = Initial;
 			} else {
 				Button_State = Wait2;
 			}
