@@ -65,7 +65,7 @@ void TickFct_LED() {
 			break;
 
 		case Button_Pressed1:
-			tmpB = 0x02
+			tmpB = 0x02;
 			break;
 
 		case LED2:
@@ -76,7 +76,6 @@ void TickFct_LED() {
 			break;
 
 		default:
-			tmpB = 0x01;
 			break;
 	}
 }
