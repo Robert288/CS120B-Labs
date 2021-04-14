@@ -101,7 +101,6 @@ void TickFct_Button() {
 			break;
 
 		default:
-			tmpC = 0x07;
 			break;
 	}
 }
@@ -111,6 +110,7 @@ int main(void) {
 	DDRC = 0xFF; PORTC = 0x00; // Configure port B's pins as output. Initialize to 0s
 
 	Button_State = Button_Start; // Indicates initial call
+	tmpC = 0x07;
 
         while (1) {
 		incrementButton = PINA & 0x01;
