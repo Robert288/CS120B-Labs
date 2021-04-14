@@ -1,6 +1,6 @@
 /*	Author: Robert Rivera 
  *	Lab Section: 021
- *	Assignment: Lab #3  Exercise #5
+ *	Assignment: Lab #4  Exercise #1
  *
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
@@ -65,16 +65,18 @@ void TickFct_LED() {
 			break;
 
 		case Button_Pressed1:
+			tmpB = 0x02
 			break;
 
 		case LED2:
-			tmpB = 0x02;
 			break;
 
 		case Button_Pressed2:
+			tmpB = 0x01;
 			break;
 
 		default:
+			tmpB = 0x01;
 			break;
 	}
 }
