@@ -60,15 +60,6 @@ void TickFct_Button() {
                                 Button_State = Wait2;
                         }		
 			break;
-
-		/* case Reset:
-		case Wait:
-                        if (!incrementButton && !decrementButton) {
-                                Button_State = Initial;
-                        } else {
-                                Button_State = Wait;
-                        }
-			break; */
 		
 		case Reset: 
                         if (!incrementButton && !decrementButton) {
