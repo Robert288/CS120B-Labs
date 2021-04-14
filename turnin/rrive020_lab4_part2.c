@@ -47,7 +47,8 @@ void TickFct_Button() {
 			if (incrementButton && decrementButton) {
 				Button_State = Reset;
 			} else {
-				Button_State = Wait2;
+				// Button_State = Wait2;
+				Button_State = Initial;
 			}
 			break;
 
@@ -63,7 +64,8 @@ void TickFct_Button() {
 			if (incrementButton && decrementButton) {
 				Button_State = Reset;
 			} else {
-				Button_State = Wait2;
+				// Button_State = Wait2;
+				Button_State = Initial;
 			}
 			break;
 
