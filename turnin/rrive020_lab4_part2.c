@@ -98,7 +98,6 @@ void TickFct_Button() {
 
 	switch (Button_State) {
 		case Initial:
-			tmpC = 7;
 			break;
 
 		case Increment:
@@ -132,6 +131,7 @@ int main(void) {
 	DDRA = 0x00; PORTA = 0xFF; // Configure port A's pins as input 
 	DDRC = 0xFF; PORTC = 0x00; // Configure port B's pins as output. Initialize to 0s
 
+	tmpC = 0x07;
 	Button_State = Button_Start; // Indicates initial call
 	
         while (1) {
