@@ -11,7 +11,7 @@
 #include "simAVRHeader.h"
 #endif
 
-enum Button_States {Button_Start, Initial, Increment, Decrement, Reset, Wait1, Wait2, Wait4} Button_State;
+enum Button_States {Button_Start, Initial, Increment, Decrement, Reset, Wait, Wait1, Wait2} Button_State;
 
 unsigned char incrementButton = 0x00;
 unsigned char decrementButton = 0x00;
@@ -24,92 +24,66 @@ void TickFct_Button() {
 			break;
 
 		case Initial:
-			if (incrementButton && !decrementButton) {
+			if (incrementButton && decrementButton) {
+				Button_State = Reset;
+			} else if (incrementButton && !decrementButton) {
 				Button_State = Increment;
 			} else if (!incrementButton && decrementButton) {
 				Button_State = Decrement;
-			} else if (incrementButton && decrementButton) {
-				Button_State = Reset;
 			} else {
 				Button_State = Initial;
 			}
 			break;
 
 		case Increment:
-			if (incrementButton == 0 && decrementButton == 0) {
-				Button_State = Wait4;
-			} else if (incrementButton == 1 && decrementButton == 0) {
-				Button_State = Wait1;
-			} else if (incrementButton == 1 && decrementButton == 1) {
+		case Wait1:
+			if (incrementButton && decrementButton) {
 				Button_State = Reset;
-			} 
+			} else if (!incrementButton && !decrementButton) {
+				Button_State = Initial;
+			} else if (!incrementButton && decrementButton) {
+				Button_State = Decrement;
+			} else {
+				Button_State = Wait1;
+			}
 			break;
 
 		case Decrement:
-			if (incrementButton == 0 && decrementButton == 0) {
-				Button_State = Wait4;
-			} else if (incrementButton == 0 && decrementButton == 1) {
-				Button_State = Wait2;
-			} else if (incrementButton == 1 && decrementButton == 1) {
-				Button_State = Reset;
-			} 
+		case Wait2:
+			if (incrementButton && decrementButton) {
+                                Button_State = Reset;
+                        } else if (!incrementButton && !decrementButton) {
+                                Button_State = Initial;
+                        } else if (incrementButton && !decrementButton) {
+                                Button_State = Increment;
+                        } else {
+                                Button_State = Wait2;
+                        }		
 			break;
 
 		case Reset:
-			if (incrementButton == 0 && decrementButton == 0) {
-				Button_State = Wait4;
-			} else {
-				Button_State = Reset;
-			}
-			break;
-
-		case Wait1:
-			if (incrementButton == 1 && decrementButton == 0) {
-				Button_State = Wait1;
-			} else if (incrementButton == 1 && decrementButton == 1) {
-				Button_State = Reset;
-			} else if (incrementButton == 0 && decrementButton == 0) {
-				Button_State = Wait4;
-			}
-			break;
-
-		case Wait2:
-			if (incrementButton == 0 && decrementButton == 1) {
-				Button_State = Wait2;
-			} else if (incrementButton == 1 && decrementButton == 1) {
-				Button_State = Reset;
-			} else if (incrementButton == 0 && decrementButton == 0) {
-				Button_State = Wait4;
-			}
-			break;
-
-		case Wait4:
-			if (incrementButton == 1 && decrementButton == 0) {
-				Button_State = Increment;
-			} else if (incrementButton == 0 && decrementButton == 1) {
-				Button_State = Decrement;
-			} else if (incrementButton == 1 && decrementButton == 1) {
-				Button_State = Reset;
-			} else {
-				Button_State = Wait4;
-			}
+		case Wait:
+                        if (!incrementButton && !decrementButton) {
+                                Button_State = Initial;
+                        } else {
+                                Button_State = Wait;
+                        }
 			break;
 	}
 
 	switch (Button_State) {
 		case Initial:
-			tmpC = 7;
 			break;
 
 		case Increment:
 			if (tmpC < 9) {
-				tmpC=tmpC+1;
+				tmpC = tmpC + 1;
 			}
 			break;
 
 		case Decrement:
 			if (tmpC > 0) {
-				tmpC=tmpC-1;
+				tmpC = tmpC - 1;
 			}
 			break;
 
@@ -117,12 +91,15 @@ void TickFct_Button() {
 			tmpC = 0;
 			break;
 
+		case Wait:
+			break;
+
 		case Wait1:
 			break;
+
 		case Wait2:
 			break;
-		case Wait4:
-			break;
+
 		default:
 			break;
 	}
@@ -132,6 +109,7 @@ int main(void) {
 	DDRA = 0x00; PORTA = 0xFF; // Configure port A's pins as input 
 	DDRC = 0xFF; PORTC = 0x00; // Configure port B's pins as output. Initialize to 0s
 
+	tmpC = 0x07;
 	Button_State = Button_Start; // Indicates initial call
 	
         while (1) {

@@ -11,7 +11,7 @@
 #include "simAVRHeader.h"
 #endif
 
-enum Button_States {Button_Start, Initial, Increment, Decrement, Reset, Wait1, Wait2} Button_State;
+enum Button_States {Button_Start, Initial, Increment, Decrement, Reset, Wait, Wait1, Wait2} Button_State;
 
 unsigned char incrementButton = 0x00;
 unsigned char decrementButton = 0x00;
@@ -24,106 +24,50 @@ void TickFct_Button() {
 			break;
 
 		case Initial:
-			if (incrementButton && !decrementButton) {
+			if (incrementButton && decrementButton) {
+				Button_State = Reset;
+			} else if (incrementButton && !decrementButton) {
 				Button_State = Increment;
 			} else if (!incrementButton && decrementButton) {
 				Button_State = Decrement;
-			} else if (incrementButton && decrementButton) {
-				Button_State = Reset;
-			} else if (!incrementButton && !decrementButton) {
+			} else {
 				Button_State = Initial;
 			}
 			break;
 
 		case Increment:
-			/* if (incrementButton == 0 && decrementButton == 0) {
-				Button_State = Initial;
-			} else if (incrementButton == 1 && decrementButton == 0) {
-				Button_State = Wait1;
-			} else if (incrementButton == 1 && decrementButton == 1) {
-				Button_State = Reset;
-			} */
-			
+		case Wait1:
 			if (incrementButton && decrementButton) {
 				Button_State = Reset;
-			} else {
-				// Button_State = Wait2;
+			} else if (!incrementButton && !decrementButton) {
 				Button_State = Initial;
+			} else if (!incrementButton && decrementButton) {
+				Button_State = Decrement;
+			} else {
+				Button_State = Wait1;
 			}
 			break;
 
 		case Decrement:
-			/* if (incrementButton == 0 && decrementButton == 0) {
-				Button_State = Initial;
-			} else if (incrementButton == 0 && decrementButton == 1) {
-				Button_State = Wait2;
-			} else if (incrementButton == 1 && decrementButton == 1) {
-				Button_State = Reset;
-			} */
-			
+		case Wait2:
 			if (incrementButton && decrementButton) {
-				Button_State = Reset;
-			} else {
-				// Button_State = Wait2;
-				Button_State = Initial;
-			}
+                                Button_State = Reset;
+                        } else if (!incrementButton && !decrementButton) {
+                                Button_State = Initial;
+                        } else if (incrementButton && !decrementButton) {
+                                Button_State = Increment;
+                        } else {
+                                Button_State = Wait2;
+                        }		
 			break;
 
 		case Reset:
-			/* if (incrementButton == 0 && decrementButton == 0) {
-				Button_State = Initial;
-			} else {
-				Button_State = Reset;
-			} */
-			
-			if (incrementButton && !decrementButton) {
-				Button_State = Increment;
-			} else if (!incrementButton && decrementButton) {
-				Button_State = Decrement;
-			} else if (incrementButton && decrementButton) {
-				Button_State = Reset;
-			} else if (!incrementButton && !decrementButton) {
-				Button_State = Initial;
-			}
-			break;
-
-		case Wait1:
-			/* if (incrementButton == 1 && decrementButton == 0) {
-				Button_State = Wait1;
-			} else if (incrementButton == 1 && decrementButton == 1) {
-				Button_State = Reset;
-			} else if (incrementButton == 0 && decrementButton == 0) {
-				Button_State = Initial;
-			} */
-			
-			if (incrementButton && !decrementButton) {
-				Button_State = Increment;
-			} else if (!incrementButton && decrementButton) {
-				Button_State = Decrement;
-			} else if (incrementButton && decrementButton) {
-				Button_State = Reset;
-			} else if (!incrementButton && !decrementButton) {
-				Button_State = Wait1;
-			}
-			break;
-
-		case Wait2:
-			/* if (!incrementButton && decrementButton) {
-				Button_State = Wait2;
-			} else if (incrementButton && decrementButton) {
-				Button_State = Reset;
-			} else if (!incrementButton && !decrementButton) {
-				Button_State = Initial;
-			} */
-			
-			if (incrementButton && decrementButton) {
-				Button_State = Reset;
-			} else if (!incrementButton && !decrementButton) {
-					// Button_State = Wait1;
-					Button_State = Initial;
-			} else {
-				Button_State = Wait2;
-			}
+		case Wait:
+                        if (!incrementButton && !decrementButton) {
+                                Button_State = Initial;
+                        } else {
+                                Button_State = Wait;
+                        }
 			break;
 	}
 
@@ -147,12 +91,15 @@ void TickFct_Button() {
 			tmpC = 0;
 			break;
 
+		case Wait:
+			break;
+
 		case Wait1:
 			break;
-			
+
 		case Wait2:
 			break;
-			
+
 		default:
 			break;
 	}
