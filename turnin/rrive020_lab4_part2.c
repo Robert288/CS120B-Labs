@@ -36,34 +36,34 @@ void TickFct_Button() {
 			break;
 
 		case Increment:
-			/* if (incrementButton == 0 && decrementButton == 0) {
+			if (incrementButton == 0 && decrementButton == 0) {
 				Button_State = Initial;
 			} else if (incrementButton == 1 && decrementButton == 0) {
 				Button_State = Wait1;
 			} else if (incrementButton == 1 && decrementButton == 1) {
 				Button_State = Reset;
-			} */
+			}
 			
-			if (incrementButton == 1 && decrementButton == 1) {
+			/* if (incrementButton == 1 && decrementButton == 1) {
 				Button_State = Reset;
 			} else {
 				Button_State = Wait1;
-			}
+			} */
 			break;
 
 		case Decrement:
-			/* if (incrementButton == 0 && decrementButton == 0) {
+			if (incrementButton == 0 && decrementButton == 0) {
 				Button_State = Initial;
 			} else if (incrementButton == 0 && decrementButton == 1) {
 				Button_State = Wait2;
 			} else if (incrementButton == 1 && decrementButton == 1) {
 				Button_State = Reset;
-			} */
-			if (incrementButton == 1 && decrementButton == 1) {
+			}
+			/* if (incrementButton == 1 && decrementButton == 1) {
 				Button_State = Reset;
 			} else {
 				Button_State = Wait2;
-			}
+			}*/
 			break;
 
 		case Reset:
@@ -122,6 +122,7 @@ void TickFct_Button() {
 			break;
 			
 		default:
+			tmpC = 7;
 			break;
 	}
 }
@@ -130,7 +131,7 @@ int main(void) {
 	DDRA = 0x00; PORTA = 0xFF; // Configure port A's pins as input 
 	DDRC = 0xFF; PORTC = 0x00; // Configure port B's pins as output. Initialize to 0s
 
-	tmpC = 0x07;
+	// tmpC = 0x07;
 	Button_State = Button_Start; // Indicates initial call
 	
         while (1) {
