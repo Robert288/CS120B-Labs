@@ -68,10 +68,20 @@ void TickFct_Button() {
 			break;
 
 		case Reset:
-			if (incrementButton == 0 && decrementButton == 0) {
+			/* if (incrementButton == 0 && decrementButton == 0) {
 				Button_State = Initial;
 			} else {
 				Button_State = Reset;
+			} */
+			
+			if (incrementButton && !decrementButton) {
+				Button_State = Increment;
+			} else if (!incrementButton && decrementButton) {
+				Button_State = Decrement;
+			} else if (incrementButton && decrementButton) {
+				Button_State = Reset;
+			} else if (!incrementButton && !decrementButton) {
+				Button_State = Initial;
 			}
 			break;
 
