@@ -97,6 +97,7 @@ void TickFct_Button() {
 
 	switch (Button_State) {
 		case Initial:
+			tmpC = 7;
 			break;
 
 		case Increment:
@@ -122,7 +123,6 @@ void TickFct_Button() {
 			break;
 			
 		default:
-			tmpC = 7;
 			break;
 	}
 }
