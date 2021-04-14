@@ -11,7 +11,6 @@
 #include "simAVRHeader.h"
 #endif
 
-// enum Button_States {Button_Start, Initial, Increment, Decrement, Reset, Wait1, Wait2, Wait4} Button_State;
 enum Button_States {Button_Start, Initial, Increment, Decrement, Reset, Wait1, Wait2} Button_State;
 
 unsigned char incrementButton = 0x00;
@@ -57,10 +56,20 @@ void TickFct_Button() {
 			break;
 
 		case Reset:
-			if (incrementButton == 0 && decrementButton == 0) {
+			/* if (incrementButton == 0 && decrementButton == 0) {
 				Button_State = Initial;
 			} else {
 				Button_State = Reset;
+			} */
+			
+			if (incrementButton && !decrementButton) {
+				Button_State = Increment;
+			} else if (!incrementButton && decrementButton) {
+				Button_State = Decrement;
+			} else if (incrementButton && decrementButton) {
+				Button_State = Reset;
+			} else if (!incrementButton && !decrementButton) {
+				Button_State = Initial;
 			}
 			break;
 
@@ -83,18 +92,6 @@ void TickFct_Button() {
 				Button_State = Initial;
 			}
 			break;
-
-		/* case Wait4:
-			if (incrementButton == 1 && decrementButton == 0) {
-				Button_State = Increment;
-			} else if (incrementButton == 0 && decrementButton == 1) {
-				Button_State = Decrement;
-			} else if (incrementButton == 1 && decrementButton == 1) {
-				Button_State = Reset;
-			} else {
-				Button_State = Wait4;
-			}
-			break; */
 	}
 
 	switch (Button_State) {
@@ -119,10 +116,10 @@ void TickFct_Button() {
 
 		case Wait1:
 			break;
+			
 		case Wait2:
 			break;
-		/* case Wait4:
-			break; */
+			
 		default:
 			break;
 	}
