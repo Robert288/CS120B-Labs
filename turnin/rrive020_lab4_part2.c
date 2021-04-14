@@ -30,7 +30,7 @@ void TickFct_Button() {
 				Button_State = Decrement;
 			} else if (incrementButton && decrementButton) {
 				Button_State = Reset;
-			} else {
+			} else if (!incrementButton && !decrementButton) {
 				Button_State = Initial;
 			}
 			break;
@@ -102,13 +102,13 @@ void TickFct_Button() {
 
 		case Increment:
 			if (tmpC < 9) {
-				tmpC=tmpC+1;
+				tmpC = tmpC + 1;
 			}
 			break;
 
 		case Decrement:
 			if (tmpC > 0) {
-				tmpC=tmpC-1;
+				tmpC = tmpC - 1;
 			}
 			break;
 
@@ -131,7 +131,7 @@ int main(void) {
 	DDRA = 0x00; PORTA = 0xFF; // Configure port A's pins as input 
 	DDRC = 0xFF; PORTC = 0x00; // Configure port B's pins as output. Initialize to 0s
 
-	tmpC = 0x07;
+	PORTC = 0x07;
 	Button_State = Button_Start; // Indicates initial call
 	
         while (1) {
