@@ -36,40 +36,41 @@ void TickFct_Button() {
 			break;
 
 		case Increment:
-			if (incrementButton == 0 && decrementButton == 0) {
+			/* if (incrementButton == 0 && decrementButton == 0) {
 				Button_State = Initial;
 			} else if (incrementButton == 1 && decrementButton == 0) {
 				Button_State = Wait1;
 			} else if (incrementButton == 1 && decrementButton == 1) {
 				Button_State = Reset;
-			} 
+			} */
+			
+			if (incrementButton == 1 && decrementButton == 1) {
+				Button_State = Reset;
+			} else {
+				Button_State = Wait1;
+			}
 			break;
 
 		case Decrement:
-			if (incrementButton == 0 && decrementButton == 0) {
+			/* if (incrementButton == 0 && decrementButton == 0) {
 				Button_State = Initial;
 			} else if (incrementButton == 0 && decrementButton == 1) {
 				Button_State = Wait2;
 			} else if (incrementButton == 1 && decrementButton == 1) {
 				Button_State = Reset;
-			} 
+			} */
+			if (incrementButton == 1 && decrementButton == 1) {
+				Button_State = Reset;
+			} else {
+				Button_State = Wait2;
+			}
 			break;
 
 		case Reset:
-			/* if (incrementButton == 0 && decrementButton == 0) {
+			if (incrementButton == 0 && decrementButton == 0) {
 				Button_State = Initial;
 			} else {
 				Button_State = Reset;
-			} */
-			
-			if (incrementButton && !decrementButton) {
-				Button_State = Increment;
-			} else if (!incrementButton && decrementButton) {
-				Button_State = Decrement;
-			} else if (incrementButton && decrementButton) {
-				Button_State = Reset;
-			} else if (!incrementButton && !decrementButton) {
-				Button_State = Initial;
 			}
 			break;
 
