@@ -35,7 +35,7 @@ void TickFct_Keypad() {
 			break;
 
 		case PoundPressed:
-			if (!buttonX && buttonY && !buttonP) {
+			/* if (!buttonX && buttonY && !buttonP) {
 				Keypad_State = DoorUnlocked;
 			} else if (!buttonX && !buttonY && !buttonP) {
 				Keypad_State = Wait;
@@ -43,7 +43,15 @@ void TickFct_Keypad() {
 				Keypad_State = PoundPressed;
 			} else {
 				Keypad_State = DoorLocked;
-			}
+			} */
+
+                        if (!buttonX && !buttonY && !buttonP) {
+                                Keypad_State = Wait;
+                        } else if (!buttonX && !buttonY && buttonP) {
+                                Keypad_State = PoundPressed;
+                        } else {
+                                Keypad_State = DoorLocked;
+                        }
 			break;
 
 		case Wait:
