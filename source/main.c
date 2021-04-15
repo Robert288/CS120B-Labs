@@ -11,14 +11,11 @@
 #include "simAVRHeader.h"
 #endif
 
-enum Keypad_States {Keypad_Start, DoorLocked, PoundPressed, Wait, DoorUnlocked, Restart, PoundPressed1, Wait1} Keypad_State;
+enum Keypad_States {Keypad_Start, DoorLocked, Sequence} Keypad_State;
 
-unsigned char buttonX = 0x00;
-unsigned char buttonY = 0x00;
-unsigned char buttonP = 0x00;
-unsigned char buttonI = 0x00;
-unsigned char doorStatus = 0x00;
-unsigned char currentState;
+unsigned char sequence[] = {0x04, 0x00, 0x01, 0x00, 0x02, 0x00, 0x01};
+unsigned char i;
+
 
 void TickFct_Keypad() {
 	switch (Keypad_State) {
@@ -27,127 +24,43 @@ void TickFct_Keypad() {
 			break;
 
 		case DoorLocked:
-			if (!buttonX && !buttonY && buttonP) {
-				Keypad_State = PoundPressed;
+			i = 0x00;
+			if ((PINA & 0x07) == sequence[i]) {
+				Keypad_State = Sequence;
 			} else {
 				Keypad_State = DoorLocked;
 			}
 			break;
 
-		case PoundPressed:
-                        if (!buttonX && !buttonY && !buttonP) {
-                                Keypad_State = Wait;
-                        } else if (!buttonX && !buttonY && buttonP) {
-                                Keypad_State = PoundPressed;
-                        } else {
-                                Keypad_State = DoorLocked;
-                        }
-			break;
-
-		case Wait:
-			if (!buttonX && buttonY && !buttonP) {
+		case Sequence:
+			i++;
+			if ((PINA & 0x07) == seqeunce[i]) {
 				Keypad_State = DoorUnlocked;
-			} else if (!buttonX && !buttonY && !buttonP) {
-				Keypad_State = Wait;
-			} else {
-				Keypad_State = DoorLocked;
-			}
-			break;
-
-		case DoorUnlocked:
-			if (buttonI && !buttonX && !buttonY && !buttonP) {
-				Keypad_State = DoorLocked;
-			} else if (!buttonX && !buttonY && !buttonP && !buttonI) { 
-				Keypad_State = Restart;
-			} else {
-				Keypad_State = DoorUnlocked;
-			}
-			break;
-
-		case Restart:
-			if (buttonI && !buttonX && !buttonY && !buttonP) {
-				Keypad_State = DoorLocked;
-			} else if (!buttonX && !buttonY && buttonP && !buttonI) {
-				Keypad_State = PoundPressed1;
-			} else {
-				Keypad_State = Restart;
-			}
-			break;
-
-		case PoundPressed1:
-			if (!buttonX && !buttonY && !buttonP && !buttonI) {
-				Keypad_State = Wait1;
-			} else if (!buttonX && !buttonY && buttonP && !buttonI) {
-				Keypad_State = PoundPressed1;
-			} else {
-				Keypad_State = Restart;
-			}
-			break;
-
-		case Wait1:
-			if (!buttonX && buttonY && !buttonP && !buttonI) {
-				Keypad_State = DoorLocked;
-			} else if (!buttonX && !buttonY && !buttonP && !buttonI) {
-				Keypad_State = Wait1;
-			} else {
-				Keypad_State = Restart;
-			}
-			break;
+			} else if (
+				
+			break;	
 	}
 
-	switch (Keypad_State) {
+	switch(Keypad_State) {
 		case DoorLocked:
-			doorStatus = 0x00;
-			currentState = DoorLocked;
-			break;
-
-		case PoundPressed:
-			currentState = PoundPressed;
-			break;
-
-		case Wait:
-			currentState = Wait;
-			break;
-
-		case DoorUnlocked:
-			doorStatus = 0x01;
-			currentState = DoorUnlocked;
-			break;
-
-		case Restart:
-			currentState = Restart;
+			PORTB = 0x00;
 			break;
 		
-		case PoundPressed1:
-			currentState = PoundPressed1;
+		case Sequence:
+			PORTB = 0x01;
 			break;
-		
-		case Wait1:
-			currentState = Wait1;
-			break;
-		
+
 		default:
-			break;	
+			break;
 	}
 }
 
 int main(void) {
 	DDRA = 0x00; PORTA = 0xFF;
 	DDRB = 0xFF; PORTB = 0x00;
-	DDRC = 0xFF; PORTC = 0x00;
 
-	Keypad_State = Keypad_Start;	
-
-        while (1) {
-		buttonX = PINA & 0x01; // PA0
-		buttonY = PINA & (0x01 << 1); // PA1
-		buttonP = PINA & (0x01 << 2); // PA2
-		buttonI = PINA & (0x01 << 7); // PA7
-
-		TickFct_Keypad();
-
-		PORTB = doorStatus;
-		PORTC = currentState;
+	while (1) {
+		TickFct_Keypad();		
 	}
 
 	return 1;
