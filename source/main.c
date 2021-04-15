@@ -57,7 +57,7 @@ void TickFct_Keypad() {
 			break;
 
 		case DoorUnlocked:
-			if (buttonI) {
+			if (buttonI && !buttonX && !buttonY && !buttonP) {
 				Keypad_State = DoorLocked;
 			} else {
 				Keypad_State = DoorUnlocked;

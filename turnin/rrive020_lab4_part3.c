@@ -1,6 +1,6 @@
 /*	Author: Robert Rivera 
  *	Lab Section: 021
- *	Assignment: Lab #4  Exercise #2
+ *	Assignment: Lab #4  Exercise #3
  *
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
@@ -57,7 +57,7 @@ void TickFct_Keypad() {
 			break;
 
 		case DoorUnlocked:
-			if (buttonI) {
+			if (buttonI && !buttonX && !buttonY && !buttonP) {
 				Keypad_State = DoorLocked;
 			} else {
 				Keypad_State = DoorUnlocked;
