@@ -1,6 +1,6 @@
 /*	Author: Robert Rivera 
  *	Lab Section: 021
- *	Assignment: Lab #4  Exercise #4
+ *	Assignment: Lab #4  Exercise #5
  *
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
@@ -102,19 +102,16 @@ void TickFct_Keypad() {
 			break;
 		
 		case Sequence:
-			PORTB = 0x01;
 			break;
 		
 		case DoorUnlocked:
-			PORTB = 0x02;
+			PORTB = 0x01;
 			break;
 		
 		case Restart:
-			PORTB = 0x03;
 			break;
 
 		case Sequence1:
-			PORTB = 0x04;
 			break;
 
 		default:
