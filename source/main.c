@@ -11,9 +11,9 @@
 #include "simAVRHeader.h"
 #endif
 
-enum Keypad_States {Keypad_Start, DoorLocked, Sequence} Keypad_State;
+enum Keypad_States {Keypad_Start, DoorLocked, Sequence, DoorUnlocked} Keypad_State;
 
-unsigned char sequence[] = {0x04, 0x00, 0x01, 0x00, 0x02, 0x00, 0x01};
+unsigned char sequence[7] = {0x04, 0x00, 0x01, 0x00, 0x02, 0x00, 0x01};
 unsigned char i;
 
 
@@ -33,12 +33,28 @@ void TickFct_Keypad() {
 			break;
 
 		case Sequence:
-			i++;
-			if ((PINA & 0x07) == seqeunce[i]) {
-				Keypad_State = DoorUnlocked;
-			} else if (
-				
+			if ((PINA & 0x07) == sequence[i]) { 
+				Keypad_State = Sequence;
+			} else if (i + 1 == 6) {
+                                i++;
+                                if ((PINA & 0x07) == sequence[i]) {
+                                        Keypad_State = DoorUnlocked;
+                                } else {
+                                        Keypad_State = DoorLocked;
+                                }
+			} else if (i < 6) {
+				i++;
+				if ((PINA & 0x07) == sequence[i]) { 
+					Keypad_State = Sequence;
+				} else {
+					Keypad_State = DoorLocked;
+				}	
+			}
 			break;	
+		
+		case DoorUnlocked:
+			Keypad_State = DoorUnlocked;
+			break;
 	}
 
 	switch(Keypad_State) {
@@ -48,6 +64,10 @@ void TickFct_Keypad() {
 		
 		case Sequence:
 			PORTB = 0x01;
+			break;
+		
+		case DoorUnlocked:
+			PORTB = 0x02;
 			break;
 
 		default:
