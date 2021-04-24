@@ -70,6 +70,7 @@ void TickFct_Lights() {
 
 	switch (Lights_State) {
 		case Beginning:
+			PORTB = 0x21;
 			break;
 
 		case Wait:
@@ -90,7 +91,6 @@ void TickFct_Lights() {
 			break;
 
 		default:
-			PORTB = 0x21;
 			break;				
 	}
 }
