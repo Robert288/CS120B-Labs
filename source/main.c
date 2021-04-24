@@ -11,114 +11,87 @@
 #include "simAVRHeader.h"
 #endif
 
-enum Keypad_States {Keypad_Start, DoorLocked, Sequence, DoorUnlocked, Restart, Sequence1} Keypad_State;
+enum Lights_States {Lights_Start, Beginning, Wait, Middle, Wait1, End, Wait2} Lights_State;
 
-unsigned char sequence[7] = {0x04, 0x00, 0x01, 0x00, 0x02, 0x00, 0x01};
-unsigned char i;
-
-
-void TickFct_Keypad() {
-	switch (Keypad_State) {
-		case Keypad_Start:
-			Keypad_State = DoorLocked;
+void TickFct_Lights() {
+	switch (Lights_State) {
+		case Lights_Start:
+			Lights_State = Beginning;
 			break;
 
-		case DoorLocked:
-			i = 0x00;
-			if ((PINA & 0x07) == sequence[i]) {
-				Keypad_State = Sequence;
+		case Beginning:
+			if (~PINA & 0x01) {
+				Lights_State = Wait;
 			} else {
-				Keypad_State = DoorLocked;
+				Lights_State = Beginning;
 			}
 			break;
 
-		case Sequence:
-			if ((PINA & 0x07) == sequence[i]) { 
-				Keypad_State = Sequence;
-			} else if (i + 1 == 6) {
-                                i++;
-                                if ((PINA & 0x07) == sequence[i]) {
-                                        Keypad_State = DoorUnlocked;
-                                } else {
-                                        Keypad_State = DoorLocked;
-                                }
-			} else if (i < 6) {
-				i++;
-				if ((PINA & 0x07) == sequence[i]) { 
-					Keypad_State = Sequence;
-				} else {
-					Keypad_State = DoorLocked;
-				}	
-			}
-			break;	
-		
-		case DoorUnlocked:
-			if ((PINA & 0x87) == 0x80) {
-				Keypad_State = DoorLocked;
-			} else if ((PINA & 0x87) == 0x00) {
-				Keypad_State = Restart;
+		case Wait:
+			if (!(~PINA & 0x01)) {
+				Lights_State = Middle;
 			} else {
-				Keypad_State = DoorUnlocked;
-			}		
-			break;
-
-		case Restart:
-			if ((PINA & 0x87) == 0x80) {
-				Keypad_State = DoorLocked;
-			} else {
-				i = 0x00;
-	                        if ((PINA & 0x87) == sequence[i]) {
-                                	Keypad_State = Sequence1;
-                        	} else {
-                                	Keypad_State = Restart;
-                        	}
+				Lights_State = Wait;
 			}
 			break;
 
-		case Sequence1:
-                        if ((PINA & 0x87) == sequence[i]) {
-                                Keypad_State = Sequence1;
-                        } else if (i + 1 == 6) {
-                                i++;
-                                if ((PINA & 0x87) == sequence[i]) {
-                                        Keypad_State = DoorLocked;
-                                } else {
-                                        Keypad_State = Restart;
-                                }
-                        } else if (i < 6) {
-                                i++;
-                                if ((PINA & 0x87) == sequence[i]) {
-                                        Keypad_State = Sequence1;
-                                } else {
-                                        Keypad_State = Restart;
-                                }
-                        }
-                        break;
+		case Middle:
+			if (~PINA & 0x01) {
+				Lights_State = Wait1;
+			} else {
+				Lights_State = Middle;
+			}
+			break;
+
+		case Wait1:
+			if (!(~PINA & 0x01)) {
+				Lights_State = End;
+			} else {
+				Lights_State = Wait1;
+			}
+			break;
+
+		case End:
+			if (~PINA & 0x01) {
+				Lights_State = Wait2;
+			} else {
+				Lights_State = End;
+			}
+			break;
+
+		case Wait2:
+			if (!(~PINA & 0x01)) { 
+				Lights_State = Beginning;
+			} else {
+				Lights_State = Wait2;
+			}
+			break; 
 	}
 
-	switch(Keypad_State) {
-		case DoorLocked:
-			PORTB = 0x00;
-			break;
-		
-		case Sequence:
-			PORTB = 0x01;
-			break;
-		
-		case DoorUnlocked:
-			PORTB = 0x02;
-			break;
-		
-		case Restart:
-			PORTB = 0x03;
+	switch (Lights_State) {
+		case Beginning:
 			break;
 
-		case Sequence1:
-			PORTB = 0x04;
+		case Wait:
+			PORTB = 0x12;
+			break;
+
+		case Middle:
+			break;
+
+		case Wait1:
+			PORTB = 0x0C;
+
+		case End:
+			break;
+
+		case Wait2:
+			PORTB = 0x21;
 			break;
 
 		default:
-			break;
+			PORTB = 0x21;
+			break;				
 	}
 }
 
@@ -126,8 +99,10 @@ int main(void) {
 	DDRA = 0x00; PORTA = 0xFF;
 	DDRB = 0xFF; PORTB = 0x00;
 
+	Lights_State = Lights_Start;
+
 	while (1) {
-		TickFct_Keypad();		
+		TickFct_Lights();
 	}
 
 	return 1;
