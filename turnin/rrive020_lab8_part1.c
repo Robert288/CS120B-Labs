@@ -14,7 +14,7 @@
 #include "simAVRHeader.h"
 #endif
 
-// 0.954 Hz is lowest frequency possible with this function,
+// 0.954 hz is lowest frequency possible with this function,
 // based on settings in PWM_on()
 // Passing in 0 as the frequency will stop the speaker from generating sound
 void set_PWM(double frequency) {
@@ -30,7 +30,7 @@ void set_PWM(double frequency) {
 		if (frequency < 0.954) { OCR3A = 0xFFFF; }
 		
 		// prevents OCR3A from underflowing, using prescaler 64
-		// 31250 is largest frequency that will not result in underflowing
+		// 31250 is largest frequency that will not result in underflow
 		else if (frequency > 31250) { OCR3A = 0x0000; }
 		
 		// set OCR3A based on desired frequency
