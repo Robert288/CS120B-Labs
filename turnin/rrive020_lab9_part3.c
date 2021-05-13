@@ -89,7 +89,7 @@ void TickFct_BlinkingLEDSM() {
 }
 
 void TickFct_SoundSM() {
-	sound = ~PINA & 0x04;
+	sound = ~PINA & (0x01 << 2);
 	
 	switch (Sound_State) {
 		case Sound_Start:
