@@ -18,10 +18,11 @@
 unsigned char threeLEDs = 0x00;
 unsigned char blinkingLED = 0x00;
 unsigned char sound = 0x00;
+unsigned char button = 0x00;
 
 enum ThreeLEDs_States {ThreeLEDs_Start, LED1, LED2, LED3} ThreeLEDs_State;
 enum BlinkingLED_States {BlinkingLED_Start, On, Off} BlinkingLED_State;
-enum Sound_States {Sound_Start, Sound_Off, Sound_On} Sound_State;
+enum Sound_States {Sound_Start, Sound_Off, Sound_On, Sound_Continue} Sound_State;
 
 void TickFct_ThreeLEDsSM() {
 	switch (ThreeLEDs_State) {
@@ -46,7 +47,8 @@ void TickFct_ThreeLEDsSM() {
 		case LED1:
 			threeLEDs = 0x01;
 			break;
-		 case LED2:
+		
+		case LED2:
 			threeLEDs = 0x02;
 			break;
 		
@@ -82,15 +84,14 @@ void TickFct_BlinkingLEDSM() {
 		case Off:
 			blinkingLED = 0x00;
 			break;
-			
+		
 		default:
 			break;
 	}
 }
 
-void TickFct_SoundSM() {	
-	sound = ~PINA & 0x04;
-	sound = (sound >> 2);
+void TickFct_SoundSM() {
+	button = ~PINA & 0x04;
 	
 	switch (Sound_State) {
 		case Sound_Start:
@@ -98,31 +99,43 @@ void TickFct_SoundSM() {
 			break;
 		
 		case Sound_Off:
-			if (sound) {
+			if (button) {
 				Sound_State = Sound_On;
 			} else {
-				Sound_State = Sound_Off;	
+				Sound_State = Sound_Off;
 			}
 			break;
-			
+		
 		case Sound_On:
-			if (!sound) {
-				Sound_State = Sound_Off;
+			if (button) {
+				Sound_State = Sound_Continue;
 			} else {
-				Sound_State = Sound_On;
+				Sound_State = Sound_Off;
 			}
+			break;
+		
+		case Sound_Continue:
+			if (button) {
+				Sound_State = Sound_On;
+			} else {
+				Sound_State = Sound_Off;
+			}
+			break;
+		
+		default:
 			break;
 	}
 	
 	switch (Sound_State) {
 		case Sound_Off:
+		case Sound_Continue:
 			sound = 0x00;
 			break;
-		
+			
 		case Sound_On:
 			sound = 0x10;
 			break;
-		
+			
 		default:
 			break;
 	}
@@ -142,7 +155,7 @@ int main(void) {
 	const unsigned long timerPeriod = 1;
 	
 	PORTB = 0x00;
-	
+		
 	TimerSet(timerPeriod);
 	TimerOn();
 	
@@ -150,8 +163,7 @@ int main(void) {
 	BlinkingLED_State = BlinkingLED_Start;
 	Sound_State = Sound_Start;
 	
-	
-  while (1) {
+	while (1) {
 		if (ThreeLEDs_elapsedTime >= 300) {
 			TickFct_ThreeLEDsSM(); // Execute one tick of the ThreeLEDs synchSM
 			ThreeLEDs_elapsedTime = 0;
@@ -174,5 +186,7 @@ int main(void) {
 		ThreeLEDs_elapsedTime += timerPeriod;
 		BlinkingLED_elapsedTime += timerPeriod;
 		Sound_elapsedTime += timerPeriod;
-  }
+	}
+	
+	return 1;
 }
