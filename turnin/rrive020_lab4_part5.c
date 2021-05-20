@@ -100,20 +100,14 @@ void TickFct_Keypad() {
 		case DoorLocked:
 			PORTB = 0x00;
 			break;
-		
-		case Sequence:
-			break;
-		
+				
 		case DoorUnlocked:
 			PORTB = 0x01;
 			break;
 		
+		case Sequence:
 		case Restart:
-			break;
-
 		case Sequence1:
-			break;
-
 		default:
 			break;
 	}
