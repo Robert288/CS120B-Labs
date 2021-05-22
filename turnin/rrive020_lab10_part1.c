@@ -35,12 +35,12 @@ int TickFct_Keypad(int state) {
 		
 		case Keypad:
 			x = GetKeypadKey();
-			
 			state = Keypad;
 			break;
 		
 		default:
 			state = Keypad_Start;
+			break;
 	}
 	
 	switch (state) {
