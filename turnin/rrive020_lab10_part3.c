@@ -1,12 +1,12 @@
 /* Author: Robert Rivera (rrive020)
  * Lab Section: 021
- * Assignment: Lab #10  Exercise #2
+ * Assignment: Lab #10  Exercise #3
  * Exercise Description: [optional - include for your own benefit]
  *
  * I acknowledge all content contained herein, excluding template or example
  * code is my own original work.
  *
- *  Demo Link:
+ *  Demo Link: https://youtu.be/w189PasznPg
  */
 
 #include <avr/io.h>
